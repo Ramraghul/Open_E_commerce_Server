@@ -1,7 +1,7 @@
 
-# Online Food Delivery API
+# E Comm API
 
-This is the API for an online food delivery application. It supports various functionalities like user management, adding new user types, and interacting with the MongoDB database.
+This is the API for an E Comm application. It supports various functionalities like user management, adding new user types, and interacting with the MongoDB database.
 
 ## Table of Contents
 1. [Installation](#installation)
@@ -35,14 +35,14 @@ This is the API for an online food delivery application. It supports various fun
    yarn start
    ```
 
-5. The server should now be running at `http://localhost:7099`.
+5. The server should now be running at `http://localhost:7100`.
 
 ## API Endpoints
 
 ### 1. Swagger Documentation
 
 You can access the Swagger UI for the API documentation at:
-- [Swagger Docs](http://localhost:7099)
+- [Swagger Docs](http://localhost:7100)
 
 ## Environment Variables
 
