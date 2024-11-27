@@ -28,14 +28,14 @@ const swaggerDefinition = {
             name: 'MIT License',
             url: 'https://opensource.org/licenses/MIT',
         },
-    },    
+    },
     servers: [
         {
             url: `http://localhost:${process.env.PORT}`,
             description: 'Development Server',
         },
         {
-            url: '',
+            url: 'https://open-food-delivery-server.vercel.app',
             description: 'Production Server',
         },
     ],
@@ -85,9 +85,9 @@ const swaggerDefinition = {
                 }
             }
         },
-        // ...palindromeSwagger.paths,
+        ...palindromeSwagger.paths,
         ...userTypeSwagger.paths,
-        // ...romanNumeralSwagger.paths,
+        ...romanNumeralSwagger.paths,
     },
     tags: [
         //Testing Tag
@@ -96,9 +96,9 @@ const swaggerDefinition = {
             description: 'Testing For Route Working or not'
         },
         //APIs List
-        // ...(palindromeSwagger.tags || []),
+        ...(palindromeSwagger.tags || []),
         ...(userTypeSwagger.tags || []),
-        // ...(romanNumeralSwagger.tags || []),
+        ...(romanNumeralSwagger.tags || []),
     ],
     apis: [
         '../../Routes/master.route'
