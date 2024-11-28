@@ -7,43 +7,58 @@ const palindromeSwagger = {
             post: {
                 tags: ['User Auth'],
                 summary: 'User Sign Up',
-                description: 'New User Registration API Part',
+                description: 'API for new user registration.',
                 requestBody: {
+                    required: true,
                     content: {
                         'application/json': {
                             schema: {
                                 type: 'object',
                                 properties: {
-                                    value: {
+                                    name: {
                                         type: 'string',
-                                        example: 'eye',
-                                        description: 'Word or string to check',
+                                        example: 'John Doe',
+                                        description: 'Name of the user.',
+                                    },
+                                    email: {
+                                        type: 'string',
+                                        example: 'johndoe@example.com',
+                                        description: 'Email of the user.',
+                                    },
+                                    password: {
+                                        type: 'string',
+                                        example: 'password123',
+                                        description: 'Password for the user account.',
                                     },
                                 },
-                                required: ['value'],
+                                required: ['name', 'email', 'password'],
                             },
                             example: {
-                                value: 'eye',
+                                name: 'John Doe',
+                                email: 'johndoe@example.com',
+                                password: 'password123',
                             },
                         },
                     },
                 },
                 responses: {
-                    '200': {
-                        description: 'Success',
+                    201: {
+                        description: 'User successfully signed up',
                         content: {
                             'application/json': {
                                 schema: {
                                     type: 'object',
                                     properties: {
-                                        status: { type: 'boolean', example: true },
-                                        message: { type: 'string', example: 'Palindrome check successful' },
+                                        success: { type: 'boolean', example: true },
+                                        message: { type: 'string', example: 'User signed up successfully.' },
                                         data: {
                                             type: 'object',
                                             properties: {
-                                                input: { type: 'string', example: 'eye' },
-                                                isPalindrome: { type: 'boolean', example: true },
-                                                solvedTime: { type: 'string', example: '0.0401 ms' },
+                                                _id: { type: 'string', example: '64f2d1c8d4e9a17d234b5f8e' },
+                                                name: { type: 'string', example: 'John Doe' },
+                                                email: { type: 'string', example: 'johndoe@example.com' },
+                                                createdAt: { type: 'string', example: '2024-11-28T10:00:00.000Z' },
+                                                updatedAt: { type: 'string', example: '2024-11-28T10:00:00.000Z' },
                                             },
                                         },
                                     },
@@ -51,13 +66,40 @@ const palindromeSwagger = {
                             },
                         },
                     },
-                    '500': {
+                    400: {
+                        description: 'Validation failed',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Validation failed',
+                                    errors: [
+                                        { msg: 'Name is required.', param: 'name', location: 'body' },
+                                        { msg: 'Invalid email format.', param: 'email', location: 'body' },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    409: {
+                        description: 'Conflict - User already exists',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'A user with this email already exists.',
+                                },
+                            },
+                        },
+                    },
+                    500: {
                         description: 'Server Error',
                         content: {
                             'application/json': {
                                 example: {
-                                    status: false,
+                                    success: false,
                                     message: 'Internal Server Error',
+                                    error: 'Detailed server error message.',
                                 },
                             },
                         },

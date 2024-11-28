@@ -23,6 +23,7 @@
     "@types/request-ip": "^0.0.41",
     "@vercel/node": "^3.2.26",
     "axios": "^1.6.3",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "chalk": "4.0.0",
     "compression": "^1.7.4",
@@ -36,6 +37,7 @@
     "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",

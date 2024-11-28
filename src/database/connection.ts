@@ -20,7 +20,7 @@ class MongoDBConnection {
             return;
         }
 
-        const MONGODB_URI: string = process.env.MONGODB_URI || 'mongodb://localhost:27017/Online_Food_Delivery';
+        const MONGODB_URI: string = process.env.MONGODB_URI || 'mongodb://localhost:27017/Open_E_Comm_Server';
         const environment = process.env.NODE_ENV || 'development';
         console.log(environment,'environment')
 

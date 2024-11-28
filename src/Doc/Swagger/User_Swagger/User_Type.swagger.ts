@@ -87,6 +87,77 @@ const userTypeSwagger = {
                 },
             },
         },
+        [`/${BaseUrlVersion}/user_type/getAllUserTypes`]: {
+            get: {
+                tags: ['User Type'],
+                summary: 'Get All User Types',
+                description: 'Fetch all user types from the system.',
+                responses: {
+                    '200': {
+                        description: 'User types fetched successfully',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        success: { type: 'boolean', example: true },
+                                        message: { type: 'string', example: 'User Types Found.' },
+                                        data: {
+                                            type: 'array',
+                                            items: {
+                                                type: 'object',
+                                                properties: {
+                                                    _id: { type: 'string', example: '6747d10e36948d9a4833b0c1' },
+                                                    name: { type: 'string', example: 'Buyer' },
+                                                    createdAt: { type: 'string', example: '2024-11-28T02:10:22.444Z' },
+                                                    updatedAt: { type: 'string', example: '2024-11-28T02:10:22.444Z' },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                example: {
+                                    success: true,
+                                    message: 'User Types Found.',
+                                    data: [
+                                        {
+                                            _id: '6747d10e36948d9a4833b0c1',
+                                            name: 'Buyer',
+                                            createdAt: '2024-11-28T02:10:22.444Z',
+                                            updatedAt: '2024-11-28T02:10:22.444Z',
+                                        },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    '404': {
+                        description: 'No User Types Found',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'No User Type Found.',
+                                    data: [],
+                                },
+                            },
+                        },
+                    },
+                    '500': {
+                        description: 'Internal Server Error',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Internal Server Error',
+                                    error: 'Detailed error message',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     },
     tags: [
         {
