@@ -1,7 +1,7 @@
 require('dotenv').config();
 const BaseUrlVersion = "api/v1";
 import swaggerJsdoc from 'swagger-jsdoc';
-import palindromeSwagger from './Auth_Swagger/palindrome.swagger';
+import userAuthSwagger from './Auth_Swagger/User_Auth.Swagger';
 import romanNumeralSwagger from './Auth_Swagger/romanNumeral.swagger';
 import userTypeSwagger from './User_Swagger/User_Type.swagger';
 
@@ -85,7 +85,7 @@ const swaggerDefinition = {
                 }
             }
         },
-        ...palindromeSwagger.paths,
+        ...userAuthSwagger.paths,
         ...userTypeSwagger.paths,
         ...romanNumeralSwagger.paths,
     },
@@ -96,7 +96,7 @@ const swaggerDefinition = {
             description: 'Testing For Route Working or not'
         },
         //APIs List
-        ...(palindromeSwagger.tags || []),
+        ...(userAuthSwagger.tags || []),
         ...(userTypeSwagger.tags || []),
         ...(romanNumeralSwagger.tags || []),
     ],

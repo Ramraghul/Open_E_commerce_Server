@@ -1,13 +1,13 @@
 const BaseUrlVersion = "api/v1";
 
 
-const palindromeSwagger = {
+const userAuthSwagger = {
     paths: {
         [`/${BaseUrlVersion}/user_auth/signUp`]: {
             post: {
                 tags: ['User Auth'],
                 summary: 'User Sign Up',
-                description: 'API for new user registration.',
+                description: 'API for new user registration. Sends an OTP to the provided email for verification.',
                 requestBody: {
                     required: true,
                     content: {
@@ -43,24 +43,32 @@ const palindromeSwagger = {
                 },
                 responses: {
                     201: {
-                        description: 'User successfully signed up',
+                        description: 'User successfully signed up and OTP sent',
                         content: {
                             'application/json': {
                                 schema: {
                                     type: 'object',
                                     properties: {
                                         success: { type: 'boolean', example: true },
-                                        message: { type: 'string', example: 'User signed up successfully.' },
+                                        message: {
+                                            type: 'string',
+                                            example: 'User signed up successfully. Please verify your email.',
+                                        },
                                         data: {
                                             type: 'object',
                                             properties: {
-                                                _id: { type: 'string', example: '64f2d1c8d4e9a17d234b5f8e' },
                                                 name: { type: 'string', example: 'John Doe' },
                                                 email: { type: 'string', example: 'johndoe@example.com' },
-                                                createdAt: { type: 'string', example: '2024-11-28T10:00:00.000Z' },
-                                                updatedAt: { type: 'string', example: '2024-11-28T10:00:00.000Z' },
                                             },
                                         },
+                                    },
+                                },
+                                example: {
+                                    success: true,
+                                    message: 'User signed up successfully. Please verify your email.',
+                                    data: {
+                                        name: 'John Doe',
+                                        email: 'johndoe@example.com',
                                     },
                                 },
                             },
@@ -99,7 +107,7 @@ const palindromeSwagger = {
                                 example: {
                                     success: false,
                                     message: 'Internal Server Error',
-                                    error: 'Detailed server error message.',
+                                    error: 'An unknown error occurred.',
                                 },
                             },
                         },
@@ -116,4 +124,4 @@ const palindromeSwagger = {
     ],
 };
 
-export default palindromeSwagger;
+export default userAuthSwagger;
