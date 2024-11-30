@@ -29,12 +29,12 @@ const swaggerDefinition = {
     },
     servers: [
         {
-            url: `http://localhost:${process.env.PORT}`,
-            description: 'Development Server',
-        },
-        {
             url: 'https://openecommerceserver.vercel.app',
             description: 'Production Server',
+        },
+        {
+            url: `http://localhost:${process.env.PORT}`,
+            description: 'Development Server',
         },
     ],
     security: [

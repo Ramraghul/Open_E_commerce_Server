@@ -23,8 +23,12 @@ export const User_Auth_Controller = {
 
             const { name, email, password } = req.body;
 
+            // Trim input values
+            const trimmedName = name.trim();
+            const trimmedEmail = email.trim().toLowerCase();
+
             // Check if the user already exists
-            const existingUser = await UserModel.findOne({ email });
+            const existingUser = await UserModel.findOne({ email: trimmedEmail });
             if (existingUser) {
                 return res.status(409).json({
                     success: false,
@@ -35,23 +39,37 @@ export const User_Auth_Controller = {
             // Hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
 
-            // Generate OTP
+            // Generate OTP and expiry time (5 minutes from now)
             const OTP = generateOTP();
+            const otpExpires = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes from now
 
             // Create user in database
             const newUser = new UserModel({
-                name,
-                email,
+                name: trimmedName,
+                email: trimmedEmail,
                 password: hashedPassword,
                 otp: OTP,
+                otpExpires,
             });
 
             // Save user to the database
             await newUser.save();
 
             // Send verification email asynchronously
-            sendEmail(email, 'Verify Your OTP', 'Congratulations! One step remains.', `<p>Your OTP is <strong>${OTP}</strong>.</p>`)
-                .catch(err => console.error('Email send error:', err));
+            try {
+                await sendEmail(
+                    trimmedEmail,
+                    'Verify Your OTP',
+                    'Congratulations! One step remains.',
+                    `<p>Your OTP is <strong>${OTP}</strong>. This OTP is valid for 5 minutes.</p>`
+                );
+            } catch (emailError) {
+                console.error('Email send error:', emailError);
+                return res.status(500).json({
+                    success: false,
+                    message: 'Failed to send OTP email. Please try again.',
+                });
+            }
 
             // Respond with success
             return res.status(201).json({
@@ -72,6 +90,69 @@ export const User_Auth_Controller = {
             });
         }
     },
+
+    //OTP Validation;
+    async otpValidation(req: Request, res: Response) {
+        try {
+            // Validate request body
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Validation failed',
+                    errors: errors.array(),
+                });
+            }
+
+            // Validate request body
+            const { email, otp } = req.body;
+
+            // Find the user by email
+            const user = await UserModel.findOne({ email });
+            if (!user) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'User not found.',
+                });
+            }
+
+            // Check if OTP matches
+            if (user.otp !== otp) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Invalid OTP.',
+                });
+            }
+
+            // Optional: Check OTP expiry (if applicable)
+            if (user.otpExpires && new Date(user.otpExpires) < new Date()) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'OTP has expired. Please request a new one.',
+                });
+            }
+
+            // Mark user as verified
+            user.isVerified = true;
+            user.otp = null; // Clear OTP after validation
+            user.otpExpires = null; // Clear expiry if applicable
+            await user.save();
+
+            // Respond with success
+            return res.status(200).json({
+                success: true,
+                message: 'OTP verified successfully. Your account is now active.',
+            });
+        } catch (error) {
+            console.error('User_OTP_Validation_Server_Error_Log:', error);
+
+            return res.status(500).json({
+                success: false,
+                message: 'Internal Server Error',
+                error: error instanceof Error ? error.message : 'An unknown error occurred.',
+            });
+        }
+    }
 };
 
 export default User_Auth_Controller;

@@ -115,7 +115,98 @@ const userAuthSwagger = {
                 },
             },
         },
-    },
+        [`/${BaseUrlVersion}/user_auth/otpValidation`]: {
+            patch: {
+                tags: ['User Auth'],
+                summary: 'OTP Validation',
+                description: 'API to validate the OTP sent to the user’s email address during sign-up.',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    email: {
+                                        type: 'string',
+                                        example: 'johndoe@example.com',
+                                        description: 'Email of the user.',
+                                    },
+                                    otp: {
+                                        type: 'string',
+                                        example: '123456',
+                                        description: 'OTP sent to the user’s email.',
+                                    },
+                                },
+                                required: ['email', 'otp'],
+                            },
+                            example: {
+                                email: 'johndoe@example.com',
+                                otp: '123456',
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: 'OTP successfully validated',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        success: { type: 'boolean', example: true },
+                                        message: {
+                                            type: 'string',
+                                            example: 'OTP verified successfully. Your account is now active.',
+                                        },
+                                    },
+                                },
+                                example: {
+                                    success: true,
+                                    message: 'OTP verified successfully. Your account is now active.',
+                                },
+                            },
+                        },
+                    },
+                    400: {
+                        description: 'Invalid OTP or expired OTP',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'OTP has expired. Please request a new one.',
+                                },
+                            },
+                        },
+                    },
+                    404: {
+                        description: 'User not found',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'User not found.',
+                                },
+                            },
+                        },
+                    },
+                    500: {
+                        description: 'Server Error',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Internal Server Error',
+                                    error: 'An unknown error occurred.',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },    
     tags: [
         {
             name: 'User Auth',

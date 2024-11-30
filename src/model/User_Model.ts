@@ -5,8 +5,9 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
-    is_verify: boolean;
-    otp: number;
+    isVerified: boolean;
+    otp?: number | null;
+    otpExpires?: Date | null;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -33,18 +34,25 @@ const UserSchema = new Schema<IUser>(
         },
         otp: {
             type: Number,
-            required: true
+            default: null,
         },
-        is_verify: {
+        otpExpires: {
+            type: Date,
+            default: null,
+        },
+        isVerified: {
             type: Boolean,
             default: false,
-        }
+        },
     },
     {
         timestamps: true,
-        versionKey: false,
+        versionKey: false, // Removes `__v` version key
     }
 );
+
+// Index to automatically expire documents with outdated OTPs (TTL index)
+UserSchema.index({ otpExpires: 1 }, { expireAfterSeconds: 0 });
 
 // Create the Mongoose model
 const UserModel = model<IUser>('User', UserSchema);
