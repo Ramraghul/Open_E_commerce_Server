@@ -206,7 +206,382 @@ const userAuthSwagger = {
                 },
             },
         },
-    },    
+        [`/${BaseUrlVersion}/user_auth/resendOTP`]: {
+            post: {
+                tags: ['User Auth'],
+                summary: 'Resend OTP',
+                description: 'API to resend the OTP to a user’s registered email address if not verified.',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    email: {
+                                        type: 'string',
+                                        example: 'johndoe@example.com',
+                                        description: 'The email address of the user.',
+                                    },
+                                },
+                                required: ['email'],
+                            },
+                            example: {
+                                email: 'johndoe@example.com',
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: 'OTP successfully resent to the user’s email.',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        success: { type: 'boolean', example: true },
+                                        message: { type: 'string', example: 'OTP resent successfully. Please check your email.' },
+                                    },
+                                },
+                                example: {
+                                    success: true,
+                                    message: 'OTP resent successfully. Please check your email.',
+                                },
+                            },
+                        },
+                    },
+                    400: {
+                        description: 'Validation failed or bad request.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Validation failed',
+                                    errors: [
+                                        { msg: 'Please provide a valid email address.', param: 'email', location: 'body' },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    404: {
+                        description: 'User not found.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'User not found.',
+                                },
+                            },
+                        },
+                    },
+                    500: {
+                        description: 'Server error.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Internal Server Error',
+                                    error: 'An unknown error occurred.',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        [`/${BaseUrlVersion}/user_auth/signIn`]: {
+            post: {
+                tags: ['User Auth'],
+                summary: 'User Sign In',
+                description: 'API to sign in a user with email and password, returning a session token.',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    email: {
+                                        type: 'string',
+                                        example: 'johndoe@example.com',
+                                        description: 'The email address of the user.',
+                                    },
+                                    password: {
+                                        type: 'string',
+                                        example: 'password123',
+                                        description: 'The password of the user.',
+                                    },
+                                },
+                                required: ['email', 'password'],
+                            },
+                            example: {
+                                email: 'johndoe@example.com',
+                                password: 'password123',
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: 'User successfully signed in and session token returned.',
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: 'object',
+                                    properties: {
+                                        success: { type: 'boolean', example: true },
+                                        message: { type: 'string', example: 'User signed in successfully.' },
+                                        token: { type: 'string', example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwiaWF0IjoxNjEwOTg1Mzc2LCJleHBpcmVkX3N0ZCI6IjExMjM0NTY3OCJ9.Jt7jTk92J6vGdHjcL6mrAbfwHK4R0I3hHiT76Lh4Q6A' },
+                                        data: {
+                                            type: 'object',
+                                            properties: {
+                                                id: { type: 'string', example: '123456' },
+                                                email: { type: 'string', example: 'johndoe@example.com' },
+                                                name: { type: 'string', example: 'John Doe' },
+                                            },
+                                        },
+                                    },
+                                },
+                                example: {
+                                    success: true,
+                                    message: 'User signed in successfully.',
+                                    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwiaWF0IjoxNjEwOTg1Mzc2LCJleHBpcmVkX3N0ZCI6IjExMjM0NTY3OCJ9.Jt7jTk92J6vGdHjcL6mrAbfwHK4R0I3hHiT76Lh4Q6A',
+                                    data: {
+                                        id: '123456',
+                                        email: 'johndoe@example.com',
+                                        name: 'John Doe',
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    400: {
+                        description: 'Validation failed or bad request.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Validation failed',
+                                    errors: [
+                                        { msg: 'Email is required.', param: 'email', location: 'body' },
+                                        { msg: 'Password is required.', param: 'password', location: 'body' },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    401: {
+                        description: 'Unauthorized - Invalid email or password.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Invalid email or password.',
+                                },
+                            },
+                        },
+                    },
+                    403: {
+                        description: 'Forbidden - User is not verified.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'User is not verified. Please verify your account before logging in.',
+                                },
+                            },
+                        },
+                    },
+                    500: {
+                        description: 'Server error.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Internal Server Error',
+                                    error: 'An unknown error occurred.',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        [`/${BaseUrlVersion}/user_auth/forgotPassword`]: {
+            post: {
+                tags: ['User Auth'],
+                summary: 'User Forgot Password',
+                description: 'API to initiate a password reset by sending a reset link to the user’s registered email.',
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    email: {
+                                        type: 'string',
+                                        example: 'johndoe@example.com',
+                                        description: 'The email address of the user.',
+                                    },
+                                },
+                                required: ['email'],
+                            },
+                            example: {
+                                email: 'johndoe@example.com',
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: 'Password reset email sent successfully.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: true,
+                                    message: 'Password reset email sent successfully. Please check your inbox.',
+                                },
+                            },
+                        },
+                    },
+                    400: {
+                        description: 'Validation failed or bad request.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Validation failed',
+                                    errors: [
+                                        { msg: 'Email is required.', param: 'email', location: 'body' },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    404: {
+                        description: 'User not found.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'User not found.',
+                                },
+                            },
+                        },
+                    },
+                    500: {
+                        description: 'Server error.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Internal Server Error',
+                                    error: 'An unknown error occurred.',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        [`/${BaseUrlVersion}/user_auth/updateNewPassword`]: {
+            post: {
+                tags: ['User Auth'],
+                summary: 'Update New Password',
+                description: 'API to update the user’s password using a valid password reset token passed in the Authorization header.',
+                security: [
+                    {
+                        BearerAuth: []
+                    }
+                ],
+                requestBody: {
+                    required: true,
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: 'object',
+                                properties: {
+                                    newPassword: {
+                                        type: 'string',
+                                        example: 'newpassword123',
+                                        description: 'The new password to set for the user.',
+                                    },
+                                },
+                                required: ['newPassword'],
+                            },
+                            example: {
+                                newPassword: 'newpassword123',
+                            },
+                        },
+                    },
+                },
+                responses: {
+                    200: {
+                        description: 'Password updated successfully.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: true,
+                                    message: 'Password updated successfully.',
+                                },
+                            },
+                        },
+                    },
+                    400: {
+                        description: 'Validation failed or bad request.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Validation failed',
+                                    errors: [
+                                        { msg: 'New password is required.', param: 'newPassword', location: 'body' },
+                                    ],
+                                },
+                            },
+                        },
+                    },
+                    401: {
+                        description: 'Unauthorized - Invalid or expired token.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Invalid or expired token.',
+                                },
+                            },
+                        },
+                    },
+                    404: {
+                        description: 'User not found.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'User not found.',
+                                },
+                            },
+                        },
+                    },
+                    500: {
+                        description: 'Server error.',
+                        content: {
+                            'application/json': {
+                                example: {
+                                    success: false,
+                                    message: 'Internal Server Error',
+                                    error: 'An unknown error occurred.',
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
     tags: [
         {
             name: 'User Auth',
