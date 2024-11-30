@@ -2,7 +2,7 @@
 import express, { Request, Response } from "express";
 const route = express.Router();
 import USER_AUTH from './Auth_Route/User_Auth.Router';
-import USER_TYPE from './User_Route/User_Type.Router';
+
 
 
 // API Version Checking API
@@ -22,8 +22,6 @@ route.get("/", (req: Request, res: Response) => {
 //User Auth, SingIn and SingOut;
 route.use('/user_auth', USER_AUTH);
 
-//User Type;
-route.use('/user_type', USER_TYPE);
 
 
 // User Route

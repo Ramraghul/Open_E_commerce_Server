@@ -2,8 +2,6 @@ require('dotenv').config();
 const BaseUrlVersion = "api/v1";
 import swaggerJsdoc from 'swagger-jsdoc';
 import userAuthSwagger from './Auth_Swagger/User_Auth.Swagger';
-import romanNumeralSwagger from './Auth_Swagger/romanNumeral.swagger';
-import userTypeSwagger from './User_Swagger/User_Type.swagger';
 
 
 // Swagger Definition
@@ -86,8 +84,6 @@ const swaggerDefinition = {
             }
         },
         ...userAuthSwagger.paths,
-        ...userTypeSwagger.paths,
-        ...romanNumeralSwagger.paths,
     },
     tags: [
         //Testing Tag
@@ -97,8 +93,6 @@ const swaggerDefinition = {
         },
         //APIs List
         ...(userAuthSwagger.tags || []),
-        ...(userTypeSwagger.tags || []),
-        ...(romanNumeralSwagger.tags || []),
     ],
     apis: [
         '../../Routes/master.route'
